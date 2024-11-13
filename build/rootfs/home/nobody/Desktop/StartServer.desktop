@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Start Server
+Comment=This startup script will start the dedicated Farming Simulator 25 server.
+Exec=/usr/local/bin/start_fs25.sh
+Icon=/home/nobody/.icons/FS25/fs25server.png
+Path=
+Terminal=false
+StartupNotify=false

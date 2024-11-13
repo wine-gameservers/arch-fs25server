@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Setup
+Comment=This setup script will install and configure a dedicated Farming Simulator 25 server.
+Exec=/usr/local/bin/setup_fs25.sh
+Icon=/home/nobody/.icons/FS25/fs25setup.png
+Path=
+Terminal=false
+StartupNotify=false

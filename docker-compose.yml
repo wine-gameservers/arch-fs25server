@@ -1,0 +1,37 @@
+services:
+  arch-fs25server:
+    image: toetje585/arch-fs25server:latest
+    container_name: arch-fs25server
+    environment:
+      - VNC_PASSWORD=fs25server
+      - PUID=1000
+      - PGID=1000
+      - WEB_USERNAME=fs25server
+      - WEB_PASSWORD=fs25server
+      - SERVER_NAME=FS25 Docker
+      - SERVER_PASSWORD=fs25server
+      - SERVER_ADMIN=fs25server
+      - SERVER_PLAYERS=16
+      - SERVER_PORT=10823
+      - SERVER_REGION=nl
+      - SERVER_DIFFICULTY=3
+      - SERVER_PAUSE=2
+      - SERVER_SAVE_INTERVAL=180.000000
+      - SERVER_STATS_INTERVAL=31536000
+      - SERVER_CROSSPLAY=true
+      - ENABLE_STARTUP_SCRIPTS=no
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /opt/fs25/config:/opt/fs25/config
+      - /opt/fs25/game:/opt/fs25/game
+      - /opt/fs25/dlc:/opt/fs25/dlc
+      - /opt/fs25/installer:/opt/fs25/installer
+    ports:
+      - 5900:5900/tcp
+      - 8080:8080/tcp
+      - 6080:6080/tcp
+      - 10823:10823/tcp
+      - 10823:10823/udp
+    cap_add:
+      - SYS_NICE
+    restart: unless-stopped

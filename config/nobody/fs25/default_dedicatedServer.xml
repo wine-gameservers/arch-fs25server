@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<server>
+    <webserver port="7999">
+        <initial_admin>
+            <username>admin</username>
+            <passphrase>webpassword</passphrase>
+        </initial_admin>
+        <tls port="8443" active="true">
+            <certificate>cert.pem</certificate>
+            <privatekey>pk.pem</privatekey>
+            <intermediateCertificates>
+                <certificate>a.pem</certificate>
+                <certificate>b.pem</certificate>
+            </intermediateCertificates>
+        </tls>
+    </webserver>
+    <game description="Farming Simulator 25" name="FarmingSimulator2025" exe="FarmingSimulator2025Game.exe">
+        <imprint active="false"><![CDATA[
+            <b>Sample Imprint Title</b><br>
+            <br>
+            Sample Imprint Text2<br>
+            <br>
+            Sample Imprint Text3<br>
+        ]]></imprint>
+        <logos>
+            <login>template/loginLogo.jpg</login>
+            <bottom>template/bottomLogo.jpg</bottom>
+        </logos>
+    </game>
+</server>
