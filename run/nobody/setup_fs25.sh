@@ -23,6 +23,22 @@ wine wineboot
 
 fi
 
+# Check dlc's
+
+if [ -f /opt/fs25/dlc/FarmingSimulator25_extraContentNewHollandCR11_*.exe ]; then
+    echo -e "${GREEN}INFO: New Holland CR11 Gold Edition SETUP FOUND!${NOCOLOR}"
+else
+	echo -e "${YELLOW}WARNING: New Holland CR11 Gold Edition Setup not found, do you own it and does it exist in the dlc mount path?${NOCOLOR}"
+	echo -e "${YELLOW}WARNING: If you do not own it ignore this!${NOCOLOR}"
+fi
+
+if [ -f /opt/fs25/dlc/FarmingSimulator25_macDonPack_*.exe ]; then
+    echo -e "${GREEN}INFO: MacDon SETUP FOUND!${NOCOLOR}"
+else
+        echo -e "${YELLOW}WARNING: MacDon Setup not found, do you own it and does it exist in the dlc mount path?${NOCOLOR}"
+        echo -e "${YELLOW}WARNING: If you do not own it ignore this!${NOCOLOR}"
+fi
+
 # it's important to check if the config directory exists on the host mount path. If it doesn't exist, create it.
 
 if [ -d /opt/fs25/config/FarmingSimulator2025 ]
@@ -123,6 +139,34 @@ then
 else
     echo -e "${RED}ERROR: Game didn't start for first time, no directories?${NOCOLOR}" && exit
 fi
+
+
+# Install DLC
+
+if [ -f ~/.fs25server/drive_c/users/nobody/Documents/My\ Games/FarmingSimulator2025/pdlc/extraContentNewHollandCR11.dlc ]
+then
+    echo -e "${GREEN}INFO: New Holland CR11 Gold Edition already installed!${NOCOLOR}"
+else
+    if [ -f /opt/fs25/dlc/FarmingSimulator25_extraContentNewHollandCR11_*.exe ]; then
+        echo -e "${GREEN}INFO: Installing New Holland CR11 Gold Edition!${NOCOLOR}"
+        for i in /opt/fs25/dlc/FarmingSimulator25_extraContentNewHollandCR11*.exe; do wine "$i"; done
+        echo -e "${GREEN}INFO: New Holland CR11 Gold Edition is now installed!${NOCOLOR}"
+    fi
+fi
+
+if [ -f ~/.fs25server/drive_c/users/nobody/Documents/My\ Games/FarmingSimulator2025/pdlc/macDonPack.dlc ]
+then
+    echo -e "${GREEN}INFO: MacDon Pack is already installed!${NOCOLOR}"
+else
+    if [ -f /opt/fs25/dlc/FarmingSimulator25_macDonPack_*.exe ]; then
+        echo -e "${GREEN}INFO: Installing MacDon Pack..!${NOCOLOR}"
+        for i in /opt/fs25/dlc/FarmingSimulator25_macDonPack*.exe; do wine "$i"; done
+        echo -e "${GREEN}INFO: MacDon Pack is now installed!${NOCOLOR}"
+    fi
+fi
+
+
+# Check for updates
 
 echo -e "${YELLOW}INFO: Checking for updates, if you get warning about gpu drivers make sure to click no!${NOCOLOR}"
 wine ~/.fs25server/drive_c/Program\ Files\ \(x86\)/Farming\ Simulator\ 2025/FarmingSimulator2025.exe
