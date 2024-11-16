@@ -16,6 +16,9 @@ ADD build/root/*.sh /root/
 # add bash script to run app
 ADD run/nobody/*.sh /usr/local/bin/
 
+# add js script to run app
+ADD run/nobody/*.mjs /usr/local/bin/
+
 # add pre-configured config files for nobody
 ADD config/nobody/ /home/nobody/.build/
 
