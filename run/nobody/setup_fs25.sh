@@ -92,16 +92,21 @@ if [ -f ~/.fs25server/drive_c/Program\ Files\ \(x86\)/Farming\ Simulator\ 2025/F
 then
     echo -e "${GREEN}INFO: Game already installed, we can skip the installer!${NOCOLOR}"
 else
-    wine "/opt/fs25/installer/FarmingSimulator2025.exe"
+    wine "/opt/fs25/installer/FarmingSimulator2025.exe" "/SILENT" "/NOCANCEL" "/NOICONS"
 fi
 
 # Cleanup Desktop
 
-if [ -f ~/Desktop/ ]
-then
-    rm -r "~/Desktop/Farming\ Simulator\ 25\ .*"
+# Find files starting with "Farming" on /home/nobody/Desktop
+icons=$(find /home/nobody/Desktop -type f -name 'Farming*')
+
+# Check if any files are found
+if [ -n "$icons" ]; then
+    # Remove all icons starting with "Farming"
+    find /home/nobody/Desktop -type f -name 'Farming*' -exec rm -f {} \;
+    echo -e "${GREEN}INFO: Files starting with 'Farming' have been removed...${NOCOLOR}"
 else
-    echo -e "${GREEN}INFO: Nothing to cleanup!${NOCOLOR}"
+    echo -e "${GREEN}INFO: No desktop icons to cleanup!${NOCOLOR}"
 fi
 
 # Do we have a license file installed?
