@@ -1,5 +1,13 @@
 #!/bin/bash
 
+# Path to the Farming Simulator executable
+FS25_EXEC="$HOME/.fs25server/drive_c/Program Files (x86)/Farming Simulator 2025/FarmingSimulator2025.exe"
+# Path to the installer directory
+INSTALLER_PATH="/opt/fs25/installer/FarmingSimulator2025.exe"
+
+# Required free space in GB
+REQUIRED_SPACE=45
+
 export WINEDLLOVERRIDES=mscoree=d
 export WINEDEBUG=-all
 export WINEPREFIX=~/.fs25server
@@ -88,11 +96,23 @@ else
 
 fi
 
-if [ -f ~/.fs25server/drive_c/Program\ Files\ \(x86\)/Farming\ Simulator\ 2025/FarmingSimulator2025.exe ]
-then
-    echo -e "${GREEN}INFO: Game already installed, we can skip the installer!${NOCOLOR}"
+# Check if the executable exists
+if [ ! -f "$FS25_EXEC" ]; then
+    echo -e "${GREEN}INFO: FarmingSimulator2025.exe does not exist. Checking available space...${NOCOLOR}"
+
+    # Get available free space in /opt/fs25 (in GB)
+    AVAILABLE_SPACE=$(df --output=avail /opt/fs25 | tail -1)
+    AVAILABLE_SPACE=$((AVAILABLE_SPACE / 1024 / 1024)) # Convert KB to GB
+
+    if [ "$AVAILABLE_SPACE" -lt "$REQUIRED_SPACE" ]; then
+        echo -e "${RED}ERROR:Not enough free space in /opt/fs25. Required: $REQUIRED_SPACE GB, Available: $AVAILABLE_SPACE GB${NOCOLOR}"
+        exit 1
+    fi
+
+    echo -e "${GREEN}INFO: Sufficient space available. Running the installer...${NOCOLOR}"
+    wine "$INSTALLER_PATH" "/SILENT" "/NOCANCEL" "/NOICONS"
 else
-    wine "/opt/fs25/installer/FarmingSimulator2025.exe" "/SILENT" "/NOCANCEL" "/NOICONS"
+    echo -e "${GREEN}INFO: FarmingSimulator2025.exe already exists. No action needed.${NOCOLOR}"
 fi
 
 # Cleanup Desktop

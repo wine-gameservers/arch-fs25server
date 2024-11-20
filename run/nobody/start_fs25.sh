@@ -7,7 +7,7 @@ export WINEPREFIX=~/.fs25server
 
 if [ -f ~/.fs25server/drive_c/Program\ Files\ \(x86\)/Farming\ Simulator\ 2025/dedicatedServer.exe ]
 then
-    wine ~/.fs25server/drive_c/Program\ Files\ \(x86\)/Farming\ Simulator\ 2025/dedicatedServer.exe
+    wine ~/.fs25server/drive_c/Program\ Files\ \(x86\)/Farming\ Simulator\ 2025/dedicatedServer.exe & sleep 1 && firefox localhost:7999
 else
     echo "Game not installed?" && exit
 fi
