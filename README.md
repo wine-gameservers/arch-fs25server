@@ -104,7 +104,7 @@ services:
     ports:
       - 5900:5900/tcp
       - 6080:6080/tcp
-      - 8080:8080/tcp
+      - 7999:7999/tcp
       - 10823:10823/tcp
       - 10823:10823/udp
     cap_add:
@@ -118,7 +118,7 @@ $ docker run -d \
     --name arch-fs25server \
     -p 5900:5900/tcp \
     -p 6080:6080/tcp \
-    -p 8080:8080/tcp \
+    -p 7999:7999/tcp \
     -p 10823:10823/tcp \
     -p 10823:10823/udp \
     -v /etc/localtime:/etc/localtime:ro \

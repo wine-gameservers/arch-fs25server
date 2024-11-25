@@ -29,6 +29,19 @@ if [[ -n "${WEBPAGE_TITLE}" ]]; then
 	vnc_start="${vnc_start} -Desktop='${WEBPAGE_TITLE}'"
 fi
 
+# Get the container's IP address, excluding the loopback interface
+IP_ADDRESS=$(ip -4 addr show scope global | grep -oP '(?<=inet\s)\d+(\.\d+){3}')
+
+# Check if an IP address was found
+if [ -n "$IP_ADDRESS" ]; then
+    # Export the IP address as an environment variable
+    export CONTAINER_IP="$IP_ADDRESS"
+    echo "CONTAINER_IP environment variable set to: $CONTAINER_IP"
+else
+    echo "No IP address found for the container."
+    exit 1
+fi
+
 # start tigervnc (vnc server) - note the port that it runs on is 5900 + display number (i.e. 5900 + 0 in the case below).
 eval "${vnc_start}" &
 

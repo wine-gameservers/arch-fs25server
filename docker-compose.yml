@@ -28,8 +28,8 @@ services:
       - /opt/fs25/installer:/opt/fs25/installer
     ports:
       - 5900:5900/tcp
-      - 8080:8080/tcp
       - 6080:6080/tcp
+      - 7999:7999/tcp
       - 10823:10823/tcp
       - 10823:10823/udp
     cap_add:
