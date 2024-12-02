@@ -93,6 +93,7 @@ services:
       - SERVER_SAVE_INTERVAL=180.000000
       - SERVER_STATS_INTERVAL=31536000
       - SERVER_CROSSPLAY=true
+      - AUTOSTART_SERVER=false
       - PUID=<UID from user>
       - PGID=<PGID from user>
     volumes:
@@ -255,6 +256,7 @@ Getting the PUID and GUID is explained [here](https://man7.org/linux/man-pages/m
 | `SERVER_SAVE_INTERVAL` | `180.000000` | Default: 180.000000, in seconds.|
 | `SERVER_STATS_INTERVAL` | `31536000` | Default: 120.000000|
 | `SERVER_CROSSPLAY` | `true/false` | Default: true |
+| `AUTOSTART_SERVER` | `true/false/web_only` | Default: false, if true the server will start automatically with the container, web_only will only start the web panel. Make sure to set this to false before installing or updating the game. |
 | `PUID` || PUID of username used on the local machine |
 | `GUID` || GUID of username used on the local machine |
 
