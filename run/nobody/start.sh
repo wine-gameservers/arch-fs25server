@@ -50,6 +50,8 @@ eval "${vnc_start}" &
 
 # Launch Xfce in the background.
 
+/usr/local/bin/autostart_fs25.sh &
+
 dbus-launch startxfce4
 
 # STARTCMD_PLACEHOLDER

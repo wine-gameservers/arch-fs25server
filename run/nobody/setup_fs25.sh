@@ -8,28 +8,7 @@ INSTALLER_PATH="/opt/fs25/installer/FarmingSimulator2025.exe"
 # Required free space in GB
 REQUIRED_SPACE=45
 
-export WINEDLLOVERRIDES=mscoree=d
-export WINEDEBUG=-all
-export WINEPREFIX=~/.fs25server
-export WINEARCH=win64
-export USER=nobody
-
-# Debug info/warning/error color
-
-NOCOLOR='\033[0;0m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-RED='\033[0;31m'
-
-# Create a clean 64bit Wineprefix
-
-if [ -d ~/.fs25server ]
-then
-    rm -r ~/.fs25server && wine wineboot
-else
-wine wineboot
-
-fi
+. /usr/local/bin/wine_init.sh
 
 # Check dlc's
 
@@ -67,34 +46,7 @@ mkdir -p /opt/fs25/game/Farming\ Simulator\ 2025
 
 fi
 
-# Symlink the host game path inside the wine prefix to preserve the installation on image deletion or update.
-
-
-if [ -d /opt/fs25/game/Farming\ Simulator\ 2025 ]
-then
-    ln -s /opt/fs25/game/Farming\ Simulator\ 2025 ~/.fs25server/drive_c/Program\ Files\ \(x86\)/Farming\ Simulator\ 2025
-else
-echo -e "${RED}Error: There is a problem... the host game directory does not exist, unable to create the symlink, the installation has failed!${NOCOLOR}"
-
-fi
-
-# Symlink the host config path inside the wine prefix to preserver the config files on image deletion or update.
-
-if [ -d ~/.fs25server/drive_c/users/$USER/Documents/My\ Games/FarmingSimulator2025 ]
-then
-    echo -e "${GREEN}INFO: The symlink is already in place, no need to create one!${NOCOLOR}"
-else
-mkdir -p ~/.fs25server/drive_c/users/$USER/Documents/My\ Games && ln -s /opt/fs25/config/FarmingSimulator2025 ~/.fs25server/drive_c/users/$USER/Documents/My\ Games/FarmingSimulator2025
-
-fi
-
-if [ -d ~/.fs25server/drive_c/users/$USER/Documents/My\ Games/FarmingSimulator2025/dedicated_server/logs ]
-then
-    echo -e "${GREEN}INFO: The log directories are in place!${NOCOLOR}"
-else
-    mkdir -p ~/.fs25server/drive_c/users/$USER/Documents/My\ Games/FarmingSimulator2025/dedicated_server/logs
-
-fi
+. /usr/local/bin/wine_symlinks.sh
 
 # Check if the executable exists
 if [ ! -f "$FS25_EXEC" ]; then
@@ -147,23 +99,7 @@ else
     echo -e "${RED}ERROR: No license files detected, they are generated after you enter the cd-key during setup... most likely the setup is failing to start!${NOCOLOR}" && exit
 fi
 
-# Copy webserver config...
-
-if [ -d ~/.fs25server/drive_c/Program\ Files\ \(x86\)/Farming\ Simulator\ 2025/ ]
-then
-    cp "/home/nobody/.build/fs25/default_dedicatedServer.xml" ~/.fs25server/drive_c/Program\ Files\ \(x86\)/Farming\ Simulator\ 2025/dedicatedServer.xml
-else
-    echo -e "${RED}ERROR: Game is not installed?${NOCOLOR}" && exit
-fi
-
-# Copy server config
-
-if [ -d ~/.fs25server/drive_c/users/$USER/Documents/My\ Games/FarmingSimulator2025/ ]
-then
-    cp "/home/nobody/.build/fs25/default_dedicatedServerConfig.xml" ~/.fs25server/drive_c/users/$USER/Documents/My\ Games/FarmingSimulator2025/dedicated_server/dedicatedServerConfig.xml
-else
-    echo -e "${RED}ERROR: Game didn't start for first time, no directories?${NOCOLOR}" && exit
-fi
+. /usr/local/bin/copy_server_config.sh
 
 
 # Install DLC
@@ -205,29 +141,7 @@ else
     echo -e "${RED}ERROR: We are missing files?${NOCOLOR}" && exit
 fi
 
-# Lets purge the logs so we won't have errors/warnings at server start...
-
-if [ -f ~/.fs25server/drive_c/users/$USER/Documents/My\ Games/FarmingSimulator2025/dedicated_server/logs/server.log ]
-then
-    rm ~/.fs25server/drive_c/users/$USER/Documents/My\ Games/FarmingSimulator2025/dedicated_server/logs/server.log && touch ~/.fs25server/drive_c/users/$USER/Documents/My\ Games/FarmingSimulator2025/dedicated_server/logs/server.log
-else
-    touch ~/.fs25server/drive_c/users/$USER/Documents/My\ Games/FarmingSimulator2025/dedicated_server/logs/server.log
-fi
-
-if [ -f ~/.fs25server/drive_c/users/$USER/Documents/My\ Games/FarmingSimulator2025/dedicated_server/logs/webserver.log ]
-then
-    rm ~/.fs25server/drive_c/users/$USER/Documents/My\ Games/FarmingSimulator2025/dedicated_server/logs/webserver.log && touch ~/.fs25server/drive_c/users/$USER/Documents/My\ Games/FarmingSimulator2025/dedicated_server/logs/webserver.log
-else
-    touch ~/.fs25server/drive_c/users/$USER/Documents/My\ Games/FarmingSimulator2025/dedicated_server/logs/webserver.log
-fi
-
-if [ -f ~/.fs25server/drive_c/users/$USER/Documents/My\ Games/FarmingSimulator2025/log.txt ]
-then
-    rm ~/.fs25server/drive_c/users/$USER/Documents/My\ Games/FarmingSimulator2025/log.txt && touch ~/.fs25server/drive_c/users/$USER/Documents/My\ Games/FarmingSimulator2025/log.txt
-else
-    touch ~/.fs25server/drive_c/users/$USER/Documents/My\ Games/FarmingSimulator2025/log.txt
-fi
-
+. /usr/local/bin/cleanup_logs.sh
 
 echo -e "${YELLOW}INFO: Checking for updates, if you get warning about gpu drivers make sure to click no!${NOCOLOR}"
 wine ~/.fs25server/drive_c/Program\ Files\ \(x86\)/Farming\ Simulator\ 2025/FarmingSimulator2025.exe
