@@ -47,6 +47,13 @@ else
         echo -e "${YELLOW}WARNING: If you do not own it ignore this!${NOCOLOR}"
 fi
 
+if [ -f /opt/fs25/dlc/FarmingSimulator25_nexatPack_*.exe ]; then
+    echo -e "${GREEN}INFO: NEXAT Pack FOUND!${NOCOLOR}"
+else
+        echo -e "${YELLOW}WARNING: NEXAT Pack not found, do you own it and does it exist in the dlc mount path?${NOCOLOR}"
+        echo -e "${YELLOW}WARNING: If you do not own it ignore this!${NOCOLOR}"
+fi
+
 # it's important to check if the config directory exists on the host mount path. If it doesn't exist, create it.
 
 if [ -d /opt/fs25/config/FarmingSimulator2025 ]
@@ -190,6 +197,16 @@ else
     fi
 fi
 
+if [ -f ~/.fs25server/drive_c/users/nobody/Documents/My\ Games/FarmingSimulator2025/pdlc/nexatPack.dlc ]
+then
+    echo -e "${GREEN}INFO: NEXAT Pack is already installed!${NOCOLOR}"
+else
+    if [ -f /opt/fs25/dlc/FarmingSimulator25_macDonPack_*.exe ]; then
+        echo -e "${GREEN}INFO: Installing NEXAT Pack..!${NOCOLOR}"
+        for i in /opt/fs25/dlc/FarmingSimulator25_macDonPack*.exe; do wine "$i"; done
+        echo -e "${GREEN}INFO: NEXAT Pack is now installed!${NOCOLOR}"
+    fi
+fi
 
 # Check for updates
 
