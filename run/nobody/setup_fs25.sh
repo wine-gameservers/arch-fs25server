@@ -203,7 +203,7 @@ then
 else
     if [ -f /opt/fs25/dlc/FarmingSimulator25_macDonPack_*.exe ]; then
         echo -e "${GREEN}INFO: Installing NEXAT Pack..!${NOCOLOR}"
-        for i in /opt/fs25/dlc/FarmingSimulator25_macDonPack*.exe; do wine "$i"; done
+        for i in /opt/fs25/dlc/FarmingSimulator25_nexatPack_*.exe; do wine "$i"; done
         echo -e "${GREEN}INFO: NEXAT Pack is now installed!${NOCOLOR}"
     fi
 fi
