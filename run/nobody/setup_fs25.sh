@@ -54,6 +54,13 @@ else
         echo -e "${YELLOW}WARNING: If you do not own it ignore this!${NOCOLOR}"
 fi
 
+if [ -f /opt/fs25/dlc/FarmingSimulator25_plainsAndPrairiesPack_*.exe ]; then
+    echo -e "${GREEN}INFO: Plains & Prairies Pack FOUND!${NOCOLOR}"
+else
+        echo -e "${YELLOW}WARNING: Plains & Prairies Pack not found, do you own it and does it exist in the dlc mount path?${NOCOLOR}"
+        echo -e "${YELLOW}WARNING: If you do not own it ignore this!${NOCOLOR}"
+fi
+
 # it's important to check if the config directory exists on the host mount path. If it doesn't exist, create it.
 
 if [ -d /opt/fs25/config/FarmingSimulator2025 ]
@@ -201,10 +208,21 @@ if [ -f ~/.fs25server/drive_c/users/nobody/Documents/My\ Games/FarmingSimulator2
 then
     echo -e "${GREEN}INFO: NEXAT Pack is already installed!${NOCOLOR}"
 else
-    if [ -f /opt/fs25/dlc/FarmingSimulator25_macDonPack_*.exe ]; then
+    if [ -f /opt/fs25/dlc/FarmingSimulator25_nexatPack_*.exe ]; then
         echo -e "${GREEN}INFO: Installing NEXAT Pack..!${NOCOLOR}"
-        for i in /opt/fs25/dlc/FarmingSimulator25_nexatPack_*.exe; do wine "$i"; done
+        for i in /opt/fs25/dlc/FarmingSimulator25_nexatPack*.exe; do wine "$i"; done
         echo -e "${GREEN}INFO: NEXAT Pack is now installed!${NOCOLOR}"
+    fi
+fi
+
+if [ -f ~/.fs25server/drive_c/users/nobody/Documents/My\ Games/FarmingSimulator2025/pdlc/plainsAndPrairiesPack.dlc ]
+then
+    echo -e "${GREEN}INFO: Plains & Prairies Pack is already installed!${NOCOLOR}"
+else
+    if [ -f /opt/fs25/dlc/FarmingSimulator25_plainsAndPrairiesPack_*.exe ]; then
+        echo -e "${GREEN}INFO: Installing Plains & Prairies Pack..!${NOCOLOR}"
+        for i in /opt/fs25/dlc/FarmingSimulator25_plainsAndPrairiesPack*.exe; do wine "$i"; done
+        echo -e "${GREEN}INFO: Plains & Prairies Pack is now installed!${NOCOLOR}"
     fi
 fi
 
