@@ -52,4 +52,4 @@ ENV LANG=en_GB.UTF-8
 #################
 
 # run script to set uid, gid and permissions
-CMD ["/bin/bash", "/usr/local/bin/init.sh"]
+CMD ["/bin/bash", "/usr/bin/init.sh"]
