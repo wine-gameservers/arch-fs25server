@@ -226,6 +226,19 @@ else
     fi
 fi
 
+# Straw Harvest Pack
+
+if [ -f ~/.fs25server/drive_c/users/nobody/Documents/My\ Games/FarmingSimulator2025/pdlc/strawHarvestPack.dlc ]
+then
+    echo -e "${GREEN}INFO: Straw Harvest Pack is already installed!${NOCOLOR}"
+else
+    if [ -f /opt/fs25/dlc/FarmingSimulator25_strawHarvestPack_*.exe ]; then
+        echo -e "${GREEN}INFO: Installing Straw Harvest Pack..!${NOCOLOR}"
+        for i in /opt/fs25/dlc/FarmingSimulator25_strawHarvestPack*.exe; do wine "$i"; done
+        echo -e "${GREEN}INFO: Straw Harvest Pack is now installed!${NOCOLOR}"
+    fi
+fi
+
 # Check for updates
 
 echo -e "${YELLOW}INFO: Checking for updates, if you get warning about gpu drivers make sure to click no!${NOCOLOR}"
