@@ -61,6 +61,13 @@ else
         echo -e "${YELLOW}WARNING: If you do not own it ignore this!${NOCOLOR}"
 fi
 
+if [ -f /opt/fs25/dlc/FarmingSimulator25_daimlerTruckPack*.exe ]; then
+    echo -e "${GREEN}INFO: Daimler Truck Pack (ESD) SETUP FOUND!${NOCOLOR}"
+else
+        echo -e "${YELLOW}WARNING: Daimler Truck Pack Setup not found, do you own it and does it exist in the dlc mount path?${NOCOLOR}"
+        echo -e "${YELLOW}WARNING: If you do not own it ignore this!${NOCOLOR}"
+fi
+
 # it's important to check if the config directory exists on the host mount path. If it doesn't exist, create it.
 
 if [ -d /opt/fs25/config/FarmingSimulator2025 ]
@@ -236,6 +243,18 @@ else
         echo -e "${GREEN}INFO: Installing Straw Harvest Pack..!${NOCOLOR}"
         for i in /opt/fs25/dlc/FarmingSimulator25_strawHarvestPack*.exe; do wine "$i"; done
         echo -e "${GREEN}INFO: Straw Harvest Pack is now installed!${NOCOLOR}"
+    fi
+fi
+
+# Daimler Truck Pack (ESD) installer
+if [ -f ~/.fs25server/drive_c/users/nobody/Documents/My\ Games/FarmingSimulator2025/pdlc/daimlerTruckPack.dlc ]
+then
+    echo -e "${GREEN}INFO: Daimler Truck Pack is already installed!${NOCOLOR}"
+else
+    if [ -f /opt/fs25/dlc/FarmingSimulator25_daimlerTruckPack*.exe ]; then
+        echo -e "${GREEN}INFO: Installing Daimler Truck Pack (ESD)...!${NOCOLOR}"
+        for i in /opt/fs25/dlc/FarmingSimulator25_daimlerTruckPack*.exe; do wine "$i"; done
+        echo -e "${GREEN}INFO: Daimler Truck Pack is now installed!${NOCOLOR}"
     fi
 fi
 
