@@ -41,7 +41,7 @@ pacman -Sy
 source upd.sh
 
 # define pacman packages
-pacman_packages="wine-staging samba exo garcon thunar xfce4-appfinder tumbler xfce4-panel xfce4-session xfce4-settings xfce4-terminal xfconf xfdesktop xfwm4 xfwm4-themes"
+pacman_packages="wine samba exo garcon thunar xfce4-appfinder tumbler xfce4-panel xfce4-session xfce4-settings xfce4-terminal xfconf xfdesktop xfwm4 xfwm4-themes"
 
 # install compiled packages using pacman
 if [[ ! -z "${pacman_packages}" ]]; then
