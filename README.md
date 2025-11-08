@@ -49,7 +49,11 @@ AMD: Zen1 or newer
 - Server for 5-10 players (with DLCs) 2.8 GHz (min. 3 Cores), 8 GB RAM
 - Server for up to 16 players (with all DLCs) 3.2 GHz (min. 4 Cores), 12 GB RAM
 
-*** Storage depends on installed dlc + mods ***
+Storage
+- Base game only: Over 50 GB
+- With all DLCs (as of November 2025): Over 65 GB
+
+*Actual size may vary depending on installed DLCs and mods.*
 
 ## Software Requirements
 
@@ -158,7 +162,7 @@ You will need to have docker and docker compose on your host. You can find detai
 
 ## Choosing a non-root user
 
-It is recommended to not run your LS server as a root user and instead either create a seperate user for that or re-use a non-privileged user. You technically can use the root user, but that raises major security concerns.
+It is recommended to not run your FS server as a root user and instead either create a seperate user for that or re-use a non-privileged user. You technically can use the root user, but that raises major security concerns.
 
 Choose a name for your user. This README uses `myuser` as example. We recommend to download this Readme File, open it in some kind of text editor and replace all ocurrances of `myuser` with your chosen username. To create a new user, run
 
@@ -246,7 +250,7 @@ This project includes a ready-to-go VNC Client, so you won't need to download an
 
 Open `http://<ip>:<port>/vnc.html?resize=remote&host=<ip>&port=<port>&&autoconnect=1` in a browser of your choice, while replacing IP and Port with your values. Please nothe, that both of them occur twice! You'll be prompted for a password, which you set as environment variable `VNC_PASSWORD`.
 
-It might happen, that the connection fails on first attempt. Go get a coffee and wait a few minutes, before making another attempt.
+It might happen, that the connection fails on first attempt. Go get a coffee and wait a few minutes, before making another attempt, the initial start of the container can take up to 20minutes.
 
 You should now see a desktop environment. Double Click 'Setup' to install FS25. You'll need your FS25 Serial Number now. Wait for the installation process to complete.
 After that, click 'Start Server'. This should spawn your game server and also open the web admin portal. You don't need to access it from your host, you can also navigate to `http://<ip>:7999` from another machine. The credentials are those you chose as `WEB_USERNAME` and `WEB_PASSWORD` in the `docker-compose.yml`.
