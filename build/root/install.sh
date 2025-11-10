@@ -41,7 +41,7 @@ pacman -Sy
 source upd.sh
 
 # define pacman packages
-pacman_packages="wine-staging samba exo garcon thunar xfce4-appfinder tumbler xfce4-panel xfce4-session xfce4-settings xfce4-terminal xfconf xfdesktop xfwm4 xfwm4-themes"
+pacman_packages="wine-staging samba exo garcon thunar xfce4-appfinder tumbler xfce4-panel xfce4-session xfce4-settings xfce4-terminal xfconf xfdesktop xfwm4 xfwm4-themes nodejs npm socat"
 
 # install compiled packages using pacman
 if [[ ! -z "${pacman_packages}" ]]; then
@@ -82,6 +82,8 @@ install_paths=$(echo "${install_paths}" | tr ',' ' ')
 # set permissions for container during build - Do NOT double quote variable for install_paths otherwise this will wrap space separated paths as a single string
 chmod -R 775 ${install_paths}
 
+chmod -R +x /usr/local/bin/*.sh
+
 # create file with contents of here doc, note EOF is NOT quoted to allow us to expand current variable 'install_paths'
 # we use escaping to prevent variable expansion for PUID and PGID, as we want these expanded at runtime of init.sh
 cat <<EOF > /tmp/permissions_heredoc
@@ -109,7 +111,7 @@ EOF
 sed -i '/# PERMISSIONS_PLACEHOLDER/{
     s/# PERMISSIONS_PLACEHOLDER//g
     r /tmp/permissions_heredoc
-}' /usr/local/bin/init.sh
+}' /usr/bin/init.sh
 rm /tmp/permissions_heredoc
 
 # env vars
@@ -185,7 +187,7 @@ EOF
 sed -i '/# ENVVARS_PLACEHOLDER/{
     s/# ENVVARS_PLACEHOLDER//g
     r /tmp/envvars_heredoc
-}' /usr/local/bin/init.sh
+}' /usr/bin/init.sh
 rm /tmp/envvars_heredoc
 
 # cleanup

@@ -19,6 +19,7 @@ services:
       - SERVER_SAVE_INTERVAL=180.000000
       - SERVER_STATS_INTERVAL=31536000
       - SERVER_CROSSPLAY=true
+      - AUTOSTART_SERVER=false
       - ENABLE_STARTUP_SCRIPTS=no
     volumes:
       - /etc/localtime:/etc/localtime:ro
