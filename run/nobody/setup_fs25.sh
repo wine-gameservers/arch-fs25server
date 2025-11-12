@@ -1,23 +1,33 @@
 #!/bin/bash
 
-# Path to the Farming Simulator executable
-FS25_EXEC="$HOME/.fs25server/drive_c/Program Files (x86)/Farming Simulator 2025/FarmingSimulator2025.exe"
-# Path to the installer directory
-INSTALLER_PATH="/opt/fs25/installer/FarmingSimulator2025.exe"
-# Path to the dlc-installer directory
+# Path to the game installer directory (where the game installation files are stored)
+INSTALL_DIR="/opt/fs25/installer"
+
+# Path to the config  directory (where the game config files are stored)
+CONFIG_DIR="/opt/fs25/config"
+
+# Path to the DLC installer directory (where downloaded DLCs are stored)
 DLC_DIR="/opt/fs25/dlc"
-# Path to the dlc-install directory
-PDLC_DIR="/opt/fs25/config/FarmingSimulator2025/pdlc/"
-# DLC Prefix
+
+# Path to the DLC install directory
+PDLC_DIR="${CONFIG_DIR}/FarmingSimulator2025/pdlc"
+
+# DLC filename prefix (used to identify official DLC packages)
 DLC_PREFIX="FarmingSimulator25_"
 
-# Required free space in GB
-REQUIRED_SPACE=50
+# Path to the Farming Simulator executable
+FS25_EXEC="$HOME/.fs25server/drive_c/Program Files (x86)/Farming Simulator 2025/FarmingSimulator2025.exe"
 
-. /usr/local/bin/wine_init.sh
 
-# Copy VERSION file before Update / Install -> fix Version to old error
-cp /opt/fs25/game/Farming\ Simulator\ 2025/VERSION /opt/fs25/config/FarmingSimulator2025/
+# Check which installer file exists
+if [ -f "$INSTALL_DIR/FarmingSimulator2025.exe" ]; then
+    INSTALLER_PATH="$INSTALL_DIR/FarmingSimulator2025.exe"
+elif [ -f "$INSTALL_DIR/Setup.exe" ]; then
+    INSTALLER_PATH="$INSTALL_DIR/Setup.exe"
+else
+    echo "Error: No installer found in $INSTALL_DIR"
+    exit 1
+fi
 
 
 # Check DLCs (list what we found and what is installed)
@@ -83,29 +93,73 @@ if ((${#supported_names[@]})); then
   done
 fi
 
-if [ -f /opt/fs25/dlc/FarmingSimulator25_highlandsFishingPack*.exe ]; then
-	echo -e "${GREEN}INFO: Highlands Fishing Pack (ESD) SETUP FOUND!${NOCOLOR}"
+# Required free space in GB
+REQUIRED_SPACE=50
+
+. /usr/local/bin/wine_init.sh
+
+
+# Check DLCs (list what we found and what is installed)
+
+echo -e "${GREEN}INFO: Scanning ${DLC_DIR} for DLC installers...${NOCOLOR}"
+
+# Enable nullglob to handle no matches gracefully
+shopt -s nullglob
+
+declare -a supported_names=()
+declare -A seen=()
+declare -a unsupported=()
+
+# Collect installers
+for path in "$DLC_DIR"/${DLC_PREFIX}*; do
+  [ -e "$path" ] || break
+  base="$(basename "$path")"
+  ext="${base##*.}"
+
+  case "$ext" in
+    exe|EXE)
+      # Example: FarmingSimulator25_highlandsFishingPack_1_1_0_0_ESD.exe
+      raw="${base#${DLC_PREFIX}}"   # highlandsFishingPack_1_1_0_0_ESD.exe
+      name="${raw%%_*}"             # highlandsFishingPack
+      if [[ -z "${seen[$name]:-}" ]]; then
+        supported_names+=("$name")
+        seen["$name"]=1
+      fi
+      ;;
+      # zip/bin installers not supported, check and warn user
+    zip|ZIP|bin|BIN)
+      unsupported+=("$base")
+      ;;
+    *)
+      # ignore other file types silently
+      :
+      ;;
+  esac
+done
+
+if ((${#supported_names[@]})); then
+  echo -e "${GREEN}INFO: DLCs found:${NOCOLOR} ${supported_names[*]}"
 else
-	echo -e "${YELLOW}WARNING: Highlands Fishing Pack Setup not found, do you own it and does it exist in the dlc mount path?${NOCOLOR}"
-	echo -e "${YELLOW}WARNING: If you do not own it ignore this!${NOCOLOR}"
+  echo -e "${YELLOW}Info: DLCs installers (.exe) found in ${DLC_DIR}.${NOCOLOR}"
 fi
 
-# it's important to check if the config directory exists on the host mount path. If it doesn't exist, create it.
-
-if [ -d /opt/fs25/config/FarmingSimulator2025 ]; then
-        echo -e "${GREEN}INFO: The host config directory exists, no need to create it!${NOCOLOR}"
-else
-        mkdir -p /opt/fs25/config/FarmingSimulator2025
-
+if ((${#unsupported[@]})); then
+  echo -e "${YELLOW}WARNING: The following files were found but are NOT supported (bin/zip), please use .exe:${NOCOLOR}"
+  for u in "${unsupported[@]}"; do
+    echo " - $u"
+  done
 fi
 
-# it's important to check if the game directory exists on the host mount path. If it doesn't exist, create it.
-
-if [ -d /opt/fs25/game/Farming\ Simulator\ 2025 ]; then
-        echo -e "${GREEN}INFO: The host game directory exists, no need to create it!${NOCOLOR}"
-else
-        mkdir -p /opt/fs25/game/Farming\ Simulator\ 2025
-
+# Show installed status for each supported DLC
+if ((${#supported_names[@]})); then
+  echo -e "${GREEN}INFO: Checking installed DLC status...${NOCOLOR}"
+  for name in "${supported_names[@]}"; do
+    if [ -f "${PDLC_DIR}/${name}.dlc" ]; then
+      echo -e "${GREEN}INFO: ${name} is already installed.${NOCOLOR}"
+    else
+      echo -e "${YELLOW}INFO: ${name} is not installed yet.${NOCOLOR}"
+    fi
+  done
 fi
 
 . /usr/local/bin/wine_symlinks.sh
@@ -199,16 +253,6 @@ else
   echo -e "${YELLOW}WARNING: No DLC installers to process.${NOCOLOR}"
 fi
 
-# Highlands Fishing Pack installer
-if [ -f ~/.fs25server/drive_c/users/nobody/Documents/My\ Games/FarmingSimulator2025/pdlc/highlandsFishingPack.dlc ]; then
-	echo -e "${GREEN}INFO: Highlands Fishing Pack is already installed!${NOCOLOR}"
-else
-	if [ -f /opt/fs25/dlc/FarmingSimulator25_highlandsFishingPack*.exe ]; then
-		echo -e "${GREEN}INFO: Installing Highlands Fishing Pack...!${NOCOLOR}"
-		for i in /opt/fs25/dlc/FarmingSimulator25_highlandsFishingPack*.exe; do wine "$i"; done
-		echo -e "${GREEN}INFO: Highlands Fishing Pack is now installed!${NOCOLOR}"
-	fi
-fi
 
 # Check for updates
 
