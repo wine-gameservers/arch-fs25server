@@ -41,12 +41,19 @@ pacman -Sy
 source upd.sh
 
 # define pacman packages
-pacman_packages="wine-staging samba exo garcon thunar xfce4-appfinder tumbler xfce4-panel xfce4-session xfce4-settings xfce4-terminal xfconf xfdesktop xfwm4 xfwm4-themes nodejs npm socat"
+pacman_packages="samba exo garcon thunar xfce4-appfinder tumbler xfce4-panel xfce4-session xfce4-settings xfce4-terminal xfconf xfdesktop xfwm4 xfwm4-themes nodejs npm socat"
+
 
 # install compiled packages using pacman
 if [[ ! -z "${pacman_packages}" ]]; then
 	pacman -S --needed $pacman_packages --noconfirm
 fi
+
+
+# install a downgraded version of wine due https://bugs.winehq.org/show_bug.cgi?id=56790
+
+
+pacman -U "https://archive.archlinux.org/packages/w/wine-staging/wine-staging-10.1-1-x86_64.pkg.tar.zst" --noconfirm
 
 # aur packages
 ####
