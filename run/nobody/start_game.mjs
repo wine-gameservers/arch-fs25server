@@ -45,7 +45,7 @@ async function send_request(host, method, data = {}, session_cookie = '') {
   if (method === 'GET' && Object.keys(data).length > 0) {
     path += '&' + body;
   }
-  const agent = new http.Agent({keepAlive: false});
+  const agent = new http.Agent({ keepAlive: false });
   const options = {
     method,
     headers,
@@ -115,7 +115,7 @@ const expected_start_params = [
   'mp_language',
   'auto_save_interval',
   'stats_interval',
-  'pause_game_if_empty',
+  'pause_game_if_empty'
 ];
 
 function get_regex(text, regex) {
@@ -164,6 +164,10 @@ async function main() {
     params[key] = unsorted_params[key];
   }
   params['game_name'] = '+%2B+' + params['game_name'];
+
+  const crossplay_checked = /<input type="checkbox" name="crossplay_allowed" checked="checked"/.test(html);
+  params['crossplay_allowed'] = crossplay_checked ? 'on' : 'off';
+
   params['start_server'] = 'Start';
 
   console.log('Starting server');
