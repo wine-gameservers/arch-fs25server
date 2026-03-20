@@ -14,7 +14,8 @@ if [[ -n "${VNC_PASSWORD}" ]]; then
 	password_length="${#VNC_PASSWORD}"
 	if [[ "${password_length}" -gt 5 ]]; then
 		echo "[info] Password length OK, proceeding to set password..."
-		echo -e "${VNC_PASSWORD}\n${VNC_PASSWORD}\nn" | vncpasswd 1>&- 2>&-
+        mkdir -p "$HOME/.vnc" && chmod 700 "$HOME/.vnc"
+        printf '%s\n' "$VNC_PASSWORD" | vncpasswd -f > "$HOME/.vnc/passwd"
 		vnc_start="${vnc_start} -PasswordFile=${HOME}/.vnc/passwd"
 	else
 		echo "[warn] Password specified is less than 6 characters and thus will be ignored."

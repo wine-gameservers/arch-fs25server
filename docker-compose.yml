@@ -8,6 +8,7 @@ services:
       - PGID=1000
       - WEB_USERNAME=fs25server
       - WEB_PASSWORD=fs25server
+      - WEB_DARKMODE=false
       - SERVER_NAME=FS25 Docker
       - SERVER_PASSWORD=fs25server
       - SERVER_ADMIN=fs25server

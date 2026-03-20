@@ -1,4 +1,4 @@
-FROM binhex/arch-int-gui:latest
+FROM binhex/arch-int-gui:2025122001
 LABEL org.opencontainers.image.authors="Toetje585"
 LABEL org.opencontainers.image.source="https://github.com/winegameservers/arch-fs25server"
 
@@ -32,6 +32,9 @@ COPY build/rootfs /
 # make executable and run bash scripts to install app
 RUN chmod +x /root/*.sh && \
 	/bin/bash /root/install.sh "${RELEASETAG}" "${TARGETARCH}"
+
+# Fix websockify trying to run on wrong python version
+RUN pip install --break-system-packages --force-reinstall websockify
 
 # docker settings
 #################

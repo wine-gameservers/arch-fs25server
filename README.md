@@ -11,19 +11,21 @@ This project is hosted at https://github.com/wine-gameservers/arch-fs25server/
 	* [Software Requirements](#software-requirements)
 		* [Linux Distribution](#linux-distribution)
 		* [Server License](#server-license)
-		* [VNC Client](#vnc-client)
+		<!--* [VNC Client](#vnc-client)-->
 * [Deployment](#deployment)
 	* [Deploying with docker-compose](#docker-compose)
 	* [Deploying with docker run](#docker-run)
 * [Installation](#installation)
+	* [Install Docker and Docker Compose](#install-docker-and-docker-compose)
+	* [Choosing a non-root user](#choosing-a-non-root-user)
 	* [Initial installation](#initial-installation)
 		* [Downloading the dedicated server](#downloading-the-dedicated-server)
 		* [Preparing the needed directories on the host machine](#preparing-the-needed-directories-on-the-host-machine)
 		* [Unpack and move the installer](#unpack-and-move-the-installer)
 		* [Starting the container](#starting-the-container)
-		* [Connecting to the VNC Server](#connecting-to-the-vnc-Server)
-	* [Server Installation](#server-installation)
-		* [Running the installation](#running-the-installation)
+		* [Connecting to the VNC Server](#connecting-to-the-vnc-server)
+		* [Server Installation](#server-installation)
+		<!--** [Running the installation](#running-the-installation)-->
 		* [Starting the admin portal](#starting-the-admin-portal)
 * [Environment variables](#environment-variables)
 <!-- vim-markdown-toc -->
@@ -39,6 +41,7 @@ While renting a server remains a viable option for certain players, it has becom
 # Getting Started
 
 Please note that this may not cover every possible scenario, particularly for NAS (synology) users. In such cases, you may need to utilize the provided admin console to configure the necessary directories and user permissions. If you encounter any issues while attempting to run the program, kindly refrain from sending me private messages. Instead, we recommend seeking assistance on our Discord server, where you can find additional support and guidance. [invite link to our Discord server](https://discord.gg/Ejz2MaXSNb). 
+Also is a youtube video available on how to: https://youtu.be/ZB7Il0f0mi4 
 
 ## Hardware Requirements
 
@@ -85,6 +88,7 @@ services:
       - VNC_PASSWORD=<your vnc password>
       - WEB_USERNAME=<dedicated server portal username>
       - WEB_PASSWORD=<dedicated server portal password>
+      - WEB_DARKMODE=false
       - SERVER_NAME=<your server name>
       - SERVER_PASSWORD=<your game join password>
       - SERVER_ADMIN=<your server admin password>
@@ -134,6 +138,7 @@ $ docker run -d \
     -e VNC_PASSWORD="<your vnc password>" \
     -e WEB_USERNAME="<dedicated server portal username>" \
     -e WEB_PASSWORD="<dedicated server portal password>" \
+    -e WEB_DARKMODE=false \
     -e SERVER_NAME="<your server name>" \
     -e SERVER_PASSWORD="your game join password" \
     -e SERVER_ADMIN="<your server admin password>" \
@@ -176,12 +181,12 @@ The second command adds your newly created user to the docker group, so it can s
 
 If you just created this user, log out and re-login using your newly created user. The remainder of this README assumes that you are logged in as `myuser`.
 
-## Downloading the dedicated server
+### Downloading the dedicated server
 
-If you purchased the game or already have a product key you can download the game and DLCs on the host machine from GIANTS [download portal](https://eshop.giants-software.com/downloads.php). You now should have a ZIP Archive containing Farming Simulator 25.
+If you purchased the game or already have a product key you can download the game and DLCs on the host machine from GIANTS [download portal](https://eshop.giants-software.com/downloads.php). You now should have a ZIP or IMG Archive containing Farming Simulator 25.
 The DLC files are often just an .exe executable. You can just download them using `curl` or `wget`, we move them into the right place later on.
 
-## Preparing the needed directories on the host machine
+### Preparing the needed directories on the host machine
 
 To ensure that the installation remains intact even if you remove or update the Docker container, it is important to configure specific directories on the host. A common practice is to place these directories in `/opt`, although you can choose any other preferred mount point according to your needs and preferences.
 
@@ -210,12 +215,13 @@ uid=1000(myuser) gid=1000(myuser) groups=1000(myuser),0(root),27(sudo),100(users
 
 You will need those values for the docker compose configuration, so make a note of them.
 
-## Unpack and move the installer
+### Unpack and move the installer
 
 You should now unpack the installer and place the unzipped files inside the directory `/mydir/fs25/installer/`, all dlc should be placed in the directory `/mydir/fs25/dlc/` directory. If we start the docker container those directories will be accessed by the container, hence making them available for installation.
+With the new change to .img files the container supports now 7z and automatic ZIP and IMG extraction. Just put your downloaded files in the correct directory and the setup does all the needed magic to extract the files while installation.
 
-## Downloading and updating the compose file / run command.
-The reccomended way to start the docker containers is using the tool docker compose. You will need to download the `docker-compose.yml` from this repository and store it on your host. You can just leave it in your users home directory or place it somewhere else, as long as you remember where you left it.
+### Downloading and updating the compose file / run command.
+The recommended way to start the docker containers is using the tool docker compose. You will need to download the `docker-compose.yml` from this repository and store it on your host. You can just leave it in your users home directory or place it somewhere else, as long as you remember where you left it.
 
 Open it in some text editor of your choice.
 
@@ -230,7 +236,7 @@ If you chose another directory, make shure you change the paths accordingly. If 
 
 You'll need to set a few values under `services > arch-fs25server > as well`. The downloaded file should contain defaults. Change them according to your wishes. You'll find explanations in the Table [Environment variables](#environment-variables).
 
-## Starting the container
+### Starting the container
 
 With the host directories configured and the compose file set up accordingly, you are now ready to start the container.
 inside the same direcoty where the modified docker-compose.yml is located run the following command.
@@ -243,17 +249,20 @@ The `-d` makes your containers run in the background, so they keep running if yo
 
 *Tip: You can use `$docker ps` to see if the container started correctly.
 
-## Connecting to the VNC Server
+### Connecting to the VNC Server
 
 After starting the Docker container for the first time, you will need to go through the initial installation of the game and DLC using a VNC client. This will allow you to set up the game and install the necessary content within the Docker environment.
 
 This project includes a ready-to-go VNC Client, so you won't need to download anything. You need to know the port under which you'll be able to access VNC. If you didn't change it, it should be `6080`. If you are connected to your host via ssh, get your host's IP so you can access it. Otherwise, you can use `127.0.0.1` as your IP.
 
-Open `http://<ip>:<port>/vnc.html?resize=remote&host=<ip>&port=<port>&&autoconnect=1` in a browser of your choice, while replacing IP and Port with your values. Please nothe, that both of them occur twice! You'll be prompted for a password, which you set as environment variable `VNC_PASSWORD`.
+Open `http://<ip>:<port>/vnc.html?resize=remote&autoconnect=1` in a browser of your choice, while replacing IP and Port with your values. You'll be prompted for a password, which you set as environment variable `VNC_PASSWORD`.
 
 It might happen, that the connection fails on first attempt. Go get a coffee and wait a few minutes, before making another attempt, the initial start of the container can take up to 20minutes.
 
-You should now see a desktop environment. Double Click 'Setup' to install FS25. You'll need your FS25 Serial Number now. Wait for the installation process to complete.
+### Server Installation
+You should now see a desktop environment. Double Click 'Setup' to install FS25. You'll need your FS25 Serial Number now. Wait for the installation process to complete. If you get a warning about gpu drivers make sure to click no! Those are irrelevant for the server.
+
+### Starting the admin portal
 After that, click 'Start Server'. This should spawn your game server and also open the web admin portal. You don't need to access it from your host, you can also navigate to `http://<ip>:7999` from another machine. The credentials are those you chose as `WEB_USERNAME` and `WEB_PASSWORD` in the `docker-compose.yml`.
 
 # Environment variables
@@ -264,7 +273,8 @@ Getting the PUID and GUID is explained [here](https://man7.org/linux/man-pages/m
 |----------|----------|-------|
 | `VNC_PASSWORD` || Password for connecting using the vnc client |
 | `WEB_USERNAME` | `admin` | Username for admin portal at :7999 |
-| `WEB_PASSWORD' | `webpassword` | Password for the admin portal |
+| `WEB_PASSWORD` | `webpassword` | Password for the admin portal |
+| `WEB_DARKMODE` |`false`| Enable Darkmode for the Webinterface, Default:false |
 | `SERVER_NAME` || Servername that will be shown in the server browser |
 | `SERVER_PORT` | `10823` | Default: 10823, port that the server will listen on |
 | `SERVER_PASSWORD` || The game join password |

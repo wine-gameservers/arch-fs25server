@@ -1,7 +1,10 @@
 [Desktop Entry]
 Version=1.0
-Type=Link
+Type=Application
 Name=Webpanel
 Comment=The webadmin panel for Farming Simulator 25
+Exec=/usr/local/bin/open_webinterface.sh
 Icon=/home/nobody/.icons/FS25/fs25webpanel.png
-URL=http://0.0.0.0:7999
+Path=
+Terminal=false
+StartupNotify=false
