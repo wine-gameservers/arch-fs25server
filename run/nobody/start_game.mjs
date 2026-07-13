@@ -85,8 +85,15 @@ async function send_request(host, method, data = {}, session_cookie = '') {
 }
 
 async function login(host, username, password) {
-  const res = await send_request(host, 'GET');
+  const request = {
+    username: username,
+    password: password,
+    login: 'Login',
+  };
+  const res = await send_request(host, 'POST', request);
+  console.log(JSON.stringify(res.headers, null, 2));
   const cookies = res.headers['set-cookie'];
+  console.log(JSON.stringify(cookies));
   assert(Array.isArray(cookies));
   let session_cookie_result = null;
 
@@ -95,13 +102,6 @@ async function login(host, username, password) {
     if (session_cookie_result !== null) break;
   }
   assert(session_cookie_result !== null);
-
-  const request = {
-    username: username,
-    password: password,
-    login: 'Login',
-  };
-  await send_request(host, 'POST', request, session_cookie_result[1]);
   return session_cookie_result[1];
 }
 
