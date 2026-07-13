@@ -41,7 +41,7 @@ pacman -Sy
 source upd.sh
 
 # define pacman packages
-pacman_packages="wine samba exo garcon thunar xfce4-appfinder tumbler xfce4-panel xfce4-session xfce4-settings xfce4-terminal xfconf xfdesktop xfwm4 xfwm4-themes nodejs npm socat 7zip"
+pacman_packages="wine samba exo garcon thunar xfce4-appfinder tumbler xfce4-panel xfce4-session xfce4-settings xfce4-terminal xfconf xfdesktop xfwm4 nodejs npm socat 7zip"
 
 
 # install compiled packages using pacman
