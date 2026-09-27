@@ -35,13 +35,14 @@ Include = /etc/pacman.d/mirrorlist \n\
 # pacman packages
 ####
 
-pacman -Sy
+pacman -Syu
 
 # call pacman db and package updater script
 source upd.sh
 
 # define pacman packages
-pacman_packages="wine samba exo garcon thunar xfce4-appfinder tumbler xfce4-panel xfce4-session xfce4-settings xfce4-terminal xfconf xfdesktop xfwm4 nodejs npm socat 7zip"
+# tigervnc/nettle are required for the container's Xvnc runtime and its crypto dependency chain.
+pacman_packages="wine samba exo garcon thunar xfce4-appfinder tumbler xfce4-panel xfce4-session xfce4-settings xfce4-terminal xfconf xfdesktop xfwm4 nodejs npm socat 7zip tigervnc nettle"
 
 
 # install compiled packages using pacman
